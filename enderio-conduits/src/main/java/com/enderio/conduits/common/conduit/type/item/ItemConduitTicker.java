@@ -18,7 +18,11 @@ import java.util.List;
 
 public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit, IItemHandler> {
 
-    public static ItemConduitTicker INSTANCE = new ItemConduitTicker();
+    private final int tickRate;
+
+    public ItemConduitTicker(int tickRate) {
+        this.tickRate = tickRate;
+    }
 
     @Override
     protected void tickCapabilityGraph(
@@ -33,7 +37,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit,
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.capability();
             for (int i = 0; i < extractHandler.getSlots(); i++) {
-                int speed = 4;
+                int speed = conduit.transferRate();
                 if (extract.upgrade() instanceof ExtractionSpeedUpgrade speedUpgrade) {
                     speed *= (int) Math.pow(2, speedUpgrade.tier());
                 }
@@ -95,6 +99,6 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit,
 
     @Override
     public int getTickRate() {
-        return 20;
+        return tickRate;
     }
 }
